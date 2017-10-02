@@ -1,0 +1,17 @@
+prijmeni;jmeno;narozen;absence;trida;pohlavi
+Bek;Michal;30.5.1990;45;IT3;M
+Bezpalec;Alois;16.2.1990;15;IT3;M
+Bradna;Adam;14.7.1989;108;IT3;M
+Divis;Jan;17.4.1989;34;SV4;M
+Dolanska;Marie;5.2.1991;77;U2;F
+Dolezal;Marek;6.12.1988;29;SV4;M
+Hajna;Lucie;7.3.1991;143;U2;F
+Hanak;Lukas;11.12.1990;68;U2;M
+Mladek;Milan;14.8.1991;72;U2;M
+Novak;Roman;1.6.1989;15;SV4;M
+Novakova;Jana;16.7.1991;83;U2;F
+Novotny;Jan;4.10.1988;38;SV4;M
+Novy;Jan;7.6.1989;145;IT3;M
+Novy;Karel;23.8.1988;0;SV4;M
+Vonasek;Josef;27.1.1990;5;IT3;M
+Zavadil;Pavel;18.6.1989;98;SV4;M
