@@ -1,0 +1,200 @@
+{\rtf1\ansi\ansicpg1250\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 /*\
+ * To change this license header, choose License Headers in Project Properties.\
+ * To change this template file, choose Tools | Templates\
+ * and open the template in the editor.\
+ */\
+\
+/* \
+ * File:   main.c\
+ * Author: dali\
+ *\
+ * Created on 21. z\'e1\uc0\u345 \'ed 2017, 14:35\
+ */\
+\
+#include <stdio.h>\
+#include <stdlib.h>\
+#include <string.h>\
+#define VSTUP "skoky.txt"\
+#define VYSTUP "vystup.html"\
+#define BUFFER_SIZE 100\
+#define ODDELOVACE ";\\n"\
+\
+/*\
+\
+char* prevodData(char* vstupniDatum)\{\
+    char *ukazatel;\
+    char *vystup = malloc(sizeof(char)*11);\
+    char den[3];\
+    char mesic[3];\
+    char rok[5];\
+    int poradi = 0;\
+    ukazatel = strtok(vstupniDatum, ".");\
+    while(ukazatel != NULL)\{\
+        switch(poradi)\{\
+            case 0:\
+                if(strlen(ukazatel) < 2)\{\
+                    den[0] = '0';\
+                    den[1] = ukazatel[0];\
+                    den[2] = '\\0';\
+                \}\
+                else\{\
+                   strcpy(den, ukazatel); \
+                \}   \
+                break;\
+            case 1:\
+                if(strlen(ukazatel) < 2)\{    \
+                    mesic[0] = '0';\
+                    mesic[1] = ukazatel[0];\
+                \}\
+                else\{\
+                   strcpy(mesic, ukazatel); \
+                \}\
+                break;\
+            case 2:\
+                strcpy(rok, ukazatel);\
+                strcat(rok, '\\0');\
+                break;\
+        \}\
+        poradi++;\
+        ukazatel = strtok(NULL, ".");\
+    \}\
+    //printf("%s %s %s", rok, mesic, den);\
+    strcpy(vystup, rok);\
+    strcat(vystup, "-");\
+    strcat(vystup, mesic);\
+    strcat(vystup, "-");\
+    strcat(vystup, den);\
+    strcat(vystup, "\\0");\
+   \
+    \
+    return vystup;\
+\}\
+*/\
+ \
+int main(int argc, char** argv) \{\
+    \
+    typedef struct\{\
+        char prijmeni[20];\
+        char jmeno[20];\
+        char datum_narozeni[20];\
+        char stat[5];\
+        int delka;\
+        char tym[5];\
+    \}SKOKAN;\
+    SKOKAN *skokani = NULL;\
+    \
+    FILE *vstup = NULL;\
+    FILE *vystup = NULL;\
+    \
+    vstup = fopen(VSTUP, "r");\
+    if(vstup == NULL)\{\
+        printf("Soubor se nepodarilo otevrit \\n");\
+        return(EXIT_FAILURE);\
+    \}\
+    \
+    char myString[BUFFER_SIZE];\
+    char *token = NULL;\
+    int i;\
+    int cisloRadku = -1;\
+    int maTym = 0;\
+    int nejdelsiSkokI = 0;\
+    int prumerSkok = 0;\
+    int memberIndex;\
+    \
+    while(fgets(myString, BUFFER_SIZE, vstup) != NULL)\{\
+        if(cisloRadku == -1)\{\
+            cisloRadku++;\
+            continue;\
+        \}\
+        skokani = (SKOKAN*)realloc(skokani, sizeof(SKOKAN)*(cisloRadku+1));\
+        token = strtok(myString, ODDELOVACE);\
+        i = 0;\
+        while(token != NULL)\{\
+            switch(i)\{\
+                case 0:\
+                    strcpy(skokani[cisloRadku].prijmeni, token);\
+                    break;\
+                case 1:\
+                    strcpy(skokani[cisloRadku].jmeno, token);\
+                    break;\
+                case 2:\
+                    strcpy(skokani[cisloRadku].datum_narozeni, token);\
+                    break;\
+                case 3:\
+                    strcpy(skokani[cisloRadku].stat, token);\
+                    break;\
+                case 4:\
+                    skokani[cisloRadku].delka = atoi(token);\
+                    if(skokani[nejdelsiSkokI].delka < skokani[cisloRadku].delka)\
+                        nejdelsiSkokI = cisloRadku;\
+                    break;\
+                case 5:\
+                    strcpy(skokani[cisloRadku].tym, token);\
+                    if(token[0] == 'A')\{\
+                        maTym++;\
+                        prumerSkok += skokani[cisloRadku].delka;\
+                    \}\
+                    break;\
+            \}\
+            i++;\
+            token = strtok(NULL, ODDELOVACE);\
+           \
+        \}\
+         cisloRadku++;\
+    \}\
+    \
+    \
+    printf("Celkovy pocet zavodniku: %d \\n", cisloRadku);\
+    printf("Pocet zavodniku zarazenych v tymu: %d \\n",cisloRadku - maTym);\
+    printf("Zavodnik s nejdelsim skokem: %s %s \\n", skokani[nejdelsiSkokI].jmeno, skokani[nejdelsiSkokI].prijmeni);\
+    printf("Prumerna delka skoku zavodniku v tymu: %.2f \\n", ((float)prumerSkok / maTym));\
+    \
+    \
+    // printf("%s", prevodData(skokani[nejdelsiSkokI].datum_narozeni));\
+    vystup = fopen(VYSTUP, "w");\
+    if(vystup == NULL)\{\
+        printf("Soubor se nepodarilo otevrit \\n");\
+        return(EXIT_FAILURE);\
+    \}\
+    \
+    fprintf(vystup, "<h1>Tym ceske republiky</h1>");\
+    fprintf(vystup, "<table>");\
+    fprintf(vystup, "<th>poradove cislo</th><th><jmeno/th><th>prijmeni</th><th>datum narozeni</th><th>delka skoku</th>");\
+    memberIndex = 0;\
+    for(i = 0; i < cisloRadku; i++)\{\
+        if(skokani[i].tym[0] == 'A' && !strcmp(skokani[i].stat, "CZE"))\{\
+            memberIndex++;\
+            fprintf(vystup, "<tr> <td> %d </td> <td> %s </td> <td> %s </td> <td> %s </td> </tr>", memberIndex, skokani[i].jmeno, skokani[i].prijmeni, skokani[i].datum_narozeni);\
+        \}  \
+    \}\
+    \
+    \
+    \
+    fprintf(vystup, "</table>");\
+    \
+    \
+    if(fclose(vstup) == EOF)\{\
+        printf("Soubor se nepodarilo uzavrit \\n");\
+        return(EXIT_FAILURE);\
+    \}\
+    \
+    if(fclose(vystup) == EOF)\{\
+        printf("Soubor se nepodarilo uzavrit \\n");\
+        return(EXIT_FAILURE);\
+    \}else\{\
+        printf("Soubor %s byl vytvoren. \\n", VYSTUP);\
+    \}\
+    \
+    \
+\
+    return (EXIT_SUCCESS);\
+\}\
+\
+}
